@@ -1,6 +1,5 @@
 package com.epam.pdp.recognitionclient.configuration;
 
-import com.epam.pdp.recognitionclient.exception.RestTemplateResponseErrorHandler;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +10,6 @@ public class CommonConfiguration {
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.errorHandler(new RestTemplateResponseErrorHandler()).build();
+        return builder.build();
     }
 }

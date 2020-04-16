@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -32,7 +34,7 @@ public class TextRecognitionService {
 
 
     public String processTextRecognitionRequest(ImLink imageLink){
-        RecognitionRequest recognitionRequest = new RecognitionRequest(UUID.randomUUID().toString(), imageLink.getImageLink());
+        RecognitionRequest recognitionRequest = new RecognitionRequest(UUID.randomUUID().toString(), imageLink.getImageLink(), LocalDateTime.now());
 
         template.convertAndSend(topicExchange.getName(), "text.", recognitionRequest);
         requestRepository.save(recognitionRequest);

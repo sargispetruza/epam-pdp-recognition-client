@@ -3,11 +3,12 @@ package com.epam.pdp.recognitionclient.domain.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "results")
 @Data
-public class RecognitionResult {
+public class RecognitionResult  implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
