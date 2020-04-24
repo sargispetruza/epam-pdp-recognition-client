@@ -13,7 +13,6 @@ public class RecognitionRequest implements Serializable {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Integer id;
-    private String requestId;
     private String imageLink;
     private LocalDateTime dateTime;
 
@@ -21,8 +20,7 @@ public class RecognitionRequest implements Serializable {
     public RecognitionRequest() {
     }
 
-    public RecognitionRequest(String requestId, String imageLink, LocalDateTime dateTime) {
-        this.requestId = requestId;
+    public RecognitionRequest(String imageLink, LocalDateTime dateTime) {
         this.imageLink = imageLink;
         this.dateTime = dateTime;
     }

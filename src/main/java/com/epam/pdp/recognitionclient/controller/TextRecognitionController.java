@@ -1,55 +1,57 @@
 package com.epam.pdp.recognitionclient.controller;
 
-import com.epam.pdp.recognitionclient.domain.dto.ImLink;
+import com.epam.pdp.recognitionclient.domain.dto.ImLinkDto;
 import com.epam.pdp.recognitionclient.domain.entity.RecognitionRequest;
 import com.epam.pdp.recognitionclient.domain.entity.RecognitionResult;
-import com.epam.pdp.recognitionclient.repository.RequestRepository;
-import com.epam.pdp.recognitionclient.service.TextRecognitionService;
+import com.epam.pdp.recognitionclient.service.RequestService;
+import com.epam.pdp.recognitionclient.service.recognition.RecognitionService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.TopicExchange;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Set;
 
-@RestController
+@Controller
 @RequestMapping("/recognition")
 @Slf4j
 public class TextRecognitionController {
 
-    private RequestRepository requestRepository;
-    private TextRecognitionService textRecognitionService;
+    private RecognitionService textRecognitionService;
+    private RequestService requestService;
+    private Integer lastRequestId;
 
-    private String lastRequestId;
-
-    public TextRecognitionController(RequestRepository requestRepository, TextRecognitionService textRecognitionService) {
-        this.requestRepository = requestRepository;
+    public TextRecognitionController(RecognitionService textRecognitionService, RequestService requestService) {
         this.textRecognitionService = textRecognitionService;
+        this.requestService = requestService;
     }
 
-    @RequestMapping(method = RequestMethod.POST, path = "/text")
-    public String textRecognitionByLink(@RequestBody ImLink imageLink) {
-        log.info("Emit to the text recognition queues");
-        lastRequestId = textRecognitionService.processTextRecognitionRequest(imageLink);
-        return "Emit to the text recognition queues";
+    @GetMapping("/text")
+    public String greetingForm(Model model) {
+        model.addAttribute("imLinkDto", new ImLinkDto());
+        return "text";
     }
 
-    @RequestMapping("/text/last")
-    public RecognitionResult getLastReport(){
+    @PostMapping("/text")
+    public String textRecognitionByLink(@ModelAttribute ImLinkDto imLinkDto) {
+        lastRequestId = textRecognitionService.processRecognitionRequest(imLinkDto);
+        return "text";
+    }
+
+    @GetMapping("/text/last")
+    public @ResponseBody RecognitionResult getLastReport(){
         return textRecognitionService.obtainReport(lastRequestId);
 
     }
 
-    @RequestMapping("/text/{requestId}")
-    public RecognitionResult getReport(@PathVariable String requestId){
+    @GetMapping("/text/{requestId}")
+    public @ResponseBody RecognitionResult getReport(@PathVariable Integer requestId){
         return textRecognitionService.obtainReport(requestId);
     }
 
-    @RequestMapping("/text/requests/list")
-    public Set<RecognitionRequest> getRequestsList(){
-        return requestRepository.findAll();
+    @GetMapping("/text/requests/list")
+    public @ResponseBody Set<RecognitionRequest> getRequestsList(){
+        return requestService.getRequestsList();
 
     }
 

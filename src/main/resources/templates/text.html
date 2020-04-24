@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<h1>Text recognition service!!!</h1>
+<form action="#" th:action="@{/recognition/text}" th:object="${imLinkDto}" method="post">
+    <p> Image recognition link: <input type="text" th:field="*{imageLink}"></p>
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+    <a href="http://localhost:8081/recognition/text/requests/list">getRequestsList</a>
+    <a href="http://localhost:8081/recognition/text/last">getLastReport</a>
+</form>
+</body>
+</html>
